@@ -1,0 +1,174 @@
+goog.provide('me.Renderable');
+goog.require('me.Rect');
+//goog.require('goog.math');
+
+
+/**
+ * A base class for renderable objects.
+ * @class
+ * @extends me.Rect
+ * @memberOf me
+ * @constructor
+ * @param {me.Vector2d} pos position of the renderable object
+ * @param {int} width object width
+ * @param {int} height object height
+ */
+me.Renderable = function(pos, width, height) {
+    // call the parent constructor
+    goog.base(this, pos, width, height);
+    // set the default anchor point (middle of the renderable)
+    if (this.anchorPoint === null) {
+        this.anchorPoint = new me.Vector2d();
+    }
+    this.anchorPoint.set(0.5, 0.5);
+    // ensure it's fully opaque by default
+    this.setOpacity(1.0);
+};
+
+goog.inherits(me.Renderable, me.Rect);
+
+/**
+ * to identify the object as a renderable object
+ * @ignore
+ */
+me.Renderable.prototype.isRenderable = true;
+/**
+ * the visible state of the renderable object<br>
+ * default value : true
+ * @public
+ * @type Boolean
+ * @name visible
+ * @memberOf me.Renderable
+ */
+me.Renderable.prototype.visible = true;
+/**
+ * Whether the renderable object is visible and within the viewport<br>
+ * default value : false
+ * @public
+ 
+ * @type Boolean
+ * @name inViewport
+ * @memberOf me.Renderable
+ */
+me.Renderable.prototype.inViewport = false;
+/**
+ * Whether the renderable object will always update, even when outside of the viewport<br>
+ * default value : false
+ * @public
+ * @type Boolean
+ * @name alwaysUpdate
+ * @memberOf me.Renderable
+ */
+me.Renderable.prototype.alwaysUpdate = false;
+/**
+ * Whether to update this object when the game is paused.
+ * default value : false
+ * @public
+ * @type Boolean
+ * @name updateWhenPaused
+ * @memberOf me.Renderable
+ */
+me.Renderable.prototype.updateWhenPaused = false;
+/**
+ * make the renderable object persistent over level changes<br>
+ * default value : false
+ * @public
+ * @type Boolean
+ * @name isPersistent
+ * @memberOf me.Renderable
+ */
+me.Renderable.prototype.isPersistent = false;
+/**
+ * Define if a renderable follows screen coordinates (floating)<br>
+ * or the world coordinates (not floating)<br>
+ * default value : false
+ * @public
+ * @type Boolean
+ * @name floating
+ * @memberOf me.Renderable
+ */
+me.Renderable.prototype.floating = false;
+/**
+ * Z-order for object sorting<br>
+ * default value : 0
+ * @private
+ * @type Number
+ * @name z
+ * @memberOf me.Renderable
+ */
+me.Renderable.prototype.z = 0;
+/**
+ * Define the object anchoring point<br>
+ * This is used when positioning, or scaling the object<br>
+ * The anchor point is a value between 0.0 and 1.0 (1.0 being the maximum size of the object) <br>
+ * (0, 0) means the top-left corner, <br> 
+ * (1, 1) means the bottom-right corner, <br>
+ * default anchoring point is the center (0.5, 0.5) of the object.
+ * @public
+ * @type me.Vector2d
+ * @name anchorPoint
+ * @memberOf me.Renderable
+ */
+me.Renderable.prototype.anchorPoint = null;
+/**
+ * Define the renderable opacity<br>
+ * @see me.Renderable#setOpacity
+ * @see me.Renderable#getOpacity 
+ * @public
+ * @type Number
+ * @name me.Renderable#alpha
+ */
+me.Renderable.prototype.alpha = 1.0;
+/**
+ * get the renderable alpha channel value<br>
+ * @name getOpacity
+ * @memberOf me.Renderable
+ * @function
+ * @return {number} current opacity value between 0 and 1
+ */
+me.Renderable.prototype.getOpacity = function() {
+    return this.alpha;
+};
+/**
+ * set the renderable alpha channel value<br>
+ * @name setOpacity
+ * @memberOf me.Renderable
+ * @function
+ * @param {alpha} alpha opacity value between 0 and 1
+ */
+me.Renderable.prototype.setOpacity = function(alpha) {
+    if (typeof (alpha) === "number") {
+        this.alpha = alpha.clamp(0.0, 1.0);
+        // Set to 1 if alpha is NaN
+        if (this.alpha !== this.alpha) {
+            this.alpha = 1.0;
+        }
+    }
+};
+/**
+ * update function
+ * called by the game manager on each game loop
+ * @name update
+ * @memberOf me.Renderable
+ * @function
+ * @protected
+ * @return false
+ **/
+me.Renderable.prototype.update = function() {
+    return false;
+};
+/**
+ * object draw
+ * called by the game manager on each game loop
+ * @name draw
+ * @memberOf me.Renderable
+ * @function
+ * @protected
+ * @param {Context2d} context 2d Context on which draw our object
+ * @param {string} color 2d Context on which draw our object
+ **/
+me.Renderable.prototype.draw = function(context, color) {
+    // draw the parent rectangle
+    //this.parent(context, color);
+    goog.base(this, "draw", context, color);
+};
